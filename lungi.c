@@ -50,10 +50,15 @@ void interschimbare(char a[1001], char b[1001], int start, int stop)
 }
 
 void scadere_real(char a[1001], char b[1001], int n) {
-
-    if(compari(a, b, 1, (n - 1) / 2 - 1) < 0) ///raspunsu are semnul lui b asa ca le interschimb
+    int cine_e_mai_mare = compari(a, b, 1, (n - 1) / 2 - 1);
+    if(cine_e_mai_mare < 0) ///raspunsu are semnul lui b asa ca le interschimb
         interschimbare(a, b, 0, (n - 1) / 2 - 1);
-    ///if(compari(a, b, 1, (n - 1) / 2 - 1) >= 0)///raspunsu are semnu lui a
+    ///if(compari(a, b, 1, (n - 1) / 2 - 1) > 0)///raspunsu are semnu lui a
+
+    //consideram 0 pozitiv
+    // if(cine_e_mai_mare == 0)
+    //     a[0] = b[0];
+
     int imprumut = 0, i, aux = 0;
     for(i = (n - 1) / 2 - 1; i >= 1 ; --i)
     {
@@ -72,12 +77,19 @@ void scadere_real(char a[1001], char b[1001], int n) {
 }
 
 void scadere_imaginar(char a[1001], char b[1001], int n) {
-    if(compari(a, b, (n - 1) / 2 + 1, n - 2) < 0) ///raspunsu are semnul lui b asa ca le interschimb
+    int cine_e_mai_mare = compari(a, b, (n - 1) / 2 + 1, n - 2);
+
+    if(cine_e_mai_mare < 0) ///raspunsu are semnul lui b asa ca le interschimb
     {
         ///pastrezi semnul lui b
         interschimbare(a, b, (n - 1) / 2, n - 2);
     }
-    ///if(compari(a, b, 1, (n - 1) / 2 - 1) >= 0)///raspunsu are semnu lui a
+
+    ///if(compari(a, b, 1, (n - 1) / 2 - 1) > 0)///raspunsu are semnu lui a
+
+    // if(cine_e_mai_mare == 0) 
+    //     a[(n - 1) / 2] = b[(n - 1) / 2];
+
     int imprumut = 0, i, aux = 0;
     for(i = n - 2; i >= (n - 1) / 2 + 1; --i)
     {
