@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int compari(char a[1001], char b[1001], int start, int stop) {
+int compari(char a[], char b[], int start, int stop) {
     for(int i = start; i <= stop; ++i) {
         if(a[i] < b[i])
             return -1;
@@ -13,7 +13,7 @@ int compari(char a[1001], char b[1001], int start, int stop) {
 
 ///aduni partile intregi si pastrezi semnul
 ///pare ca merge
-void adunare_real(char a[1001], char b[1001], int n){
+void adunare_real(char a[], char b[], int n){
     ///adunam partea reala;
 
     ///if(a[0] == b[0])
@@ -25,7 +25,7 @@ void adunare_real(char a[1001], char b[1001], int n){
     }
 }
 
-void adunare_imaginar(char a[1001], char b[1001], int n) {
+void adunare_imaginar(char a[], char b[], int n) {
    /// if(a[(n - 1) / 2] == b[(n - 1) / 2])
     int tin_minte = 0, aux;
     for(int i = n - 2; i >= (n - 1) /2 + 1; --i) {
@@ -43,13 +43,13 @@ void swap(char *x, char *y) {
 }
 
 ///interschimbarea a doua siruri de caractere cu indici
-void interschimbare(char a[1001], char b[1001], int start, int stop)
+void interschimbare(char a[], char b[], int start, int stop)
 {
     for(int i = start; i <= stop; ++i)
         swap(&a[i], &b[i]);
 }
 
-void scadere_real(char a[1001], char b[1001], int n) {
+void scadere_real(char a[], char b[], int n) {
     int cine_e_mai_mare = compari(a, b, 1, (n - 1) / 2 - 1);
     if(cine_e_mai_mare < 0) ///raspunsu are semnul lui b asa ca le interschimb
         interschimbare(a, b, 0, (n - 1) / 2 - 1);
@@ -76,7 +76,7 @@ void scadere_real(char a[1001], char b[1001], int n) {
     }
 }
 
-void scadere_imaginar(char a[1001], char b[1001], int n) {
+void scadere_imaginar(char a[], char b[], int n) {
     int cine_e_mai_mare = compari(a, b, (n - 1) / 2 + 1, n - 2);
 
     if(cine_e_mai_mare < 0) ///raspunsu are semnul lui b asa ca le interschimb
@@ -108,14 +108,14 @@ void scadere_imaginar(char a[1001], char b[1001], int n) {
 }
 
 ///ai grija ca citesti si enterul
-void afisare(char s[1001], int n) {
+void afisare(char s[], int n) {
     for(int i = 0; i < n; ++i)
         printf("%c", s[i]);
     printf("\n");
 }
 
 
-void schimbare_de_semn(char b[1001], int n) {
+void schimbare_de_semn(char b[], int n) {
 ///daca e minus schimbi semnul partilor urmatorului nr complex lung
     if(b[0] == '0')
         b[0] = '1';
@@ -127,7 +127,7 @@ void schimbare_de_semn(char b[1001], int n) {
         b[(n - 1) / 2] = '0';
 }
 
-void faci_operatia(char a[1001], char b[1001], int n) {
+void faci_operatia(char a[], char b[], int n) {
     if(a[0] == b[0]) {
         adunare_real(a, b, n);
     }
@@ -143,12 +143,12 @@ int main()
 {
     int n;
     char spatiu, operatie;
-    char a[1001], b[1001];
+    char a[1002], b[1002];
     scanf("%d", &n);
     scanf("%c", &spatiu);
 
     ///citim primul sir
-    fgets(a, 1001, stdin);
+    fgets(a, 1002, stdin);
 
     ///citim operatia
     scanf("%c", &operatie);
@@ -158,7 +158,7 @@ int main()
         scanf("%c", &spatiu);
 
         ///citim urmatorul sir
-        fgets(b, 1001, stdin);
+        fgets(b, 1002, stdin);
 
         ///facem schimbarea de semn daca avem scadere
         if(operatie == '-')
