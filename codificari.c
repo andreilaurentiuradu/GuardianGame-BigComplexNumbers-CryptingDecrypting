@@ -161,10 +161,11 @@ void reverse_sort(char a[nmax][nmax], char cheie[], int nr_linii){
         }
     }
 
-    // for(int i = 0; i < strlen(cheie); ++i)
-    //     printf("%d ", marcat[i]);
-    // printf("\n");
-
+    for(int i = 0; i < strlen(cheie); ++i)
+        printf("%d ", marcat[i]);
+    printf("\n");
+    printf("nrlinii = %d\n", nr_linii);
+    
     for(int i = 0; i < strlen(cheie); ++i) {
         for(int j = i + 1; j < strlen(cheie); ++j) {
             if(marcat[i] > marcat[j]){
@@ -173,8 +174,6 @@ void reverse_sort(char a[nmax][nmax], char cheie[], int nr_linii){
             }
         }
     }
-
-    //afisare_matrice(a, nr_linii, strlen(cheie));
 
 }
 
@@ -210,6 +209,13 @@ void codificareA(char s[], int n, char cheie[], int lungime_cheie) {
 void decodificareA(char s[], int n, char cheie[], int lungime_cheie) {
     int nr_linii;
     char a[nmax][nmax];
+
+    for(int i = 0; i < 500; ++i) {
+        for(int j = 0; j < 500; ++j) {
+            a[i][j] = ' ';
+        }
+    }
+
     nr_linii = n / lungime_cheie;
     if(n % lungime_cheie != 0)
         nr_linii++;
@@ -217,12 +223,17 @@ void decodificareA(char s[], int n, char cheie[], int lungime_cheie) {
     int k = 0;
     for(int j = 0; j < lungime_cheie; ++j){
         for(int i = 0; i < nr_linii; ++i) {
-            a[i][j] = s[k];
-            ++k;
+            if(k < strlen(s)){
+                a[i][j] = s[k];
+                ++k;
+            }
+            else
+                a[i][j] = ' ';
         }
     }
-    //afisare_matrice(a, nr_linii, lungime_cheie);
+    afisare_matrice(a, nr_linii, lungime_cheie);//matricea e creata bine
     reverse_sort(a, cheie, nr_linii);
+    afisare_matrice(a, nr_linii, lungime_cheie);
 
     k = 0;
     for(int i = 0; i < nr_linii; ++i){
