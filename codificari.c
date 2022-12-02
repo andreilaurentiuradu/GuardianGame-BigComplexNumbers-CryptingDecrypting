@@ -98,6 +98,18 @@ void sortare(char a[nmax][nmax], char cheie[], int n, int nr_linii) {
     }
 }
 
+void sortare_vector_char(char s[], int n) {
+    for(int i = 0; i < n; ++i) {
+        for(int j = i + 1; j < n; ++j) {
+            if(s[i] > s[j])
+                swap_char(&s[i], &s[j]);
+        }
+    }
+}
+
+
+
+
 void creare_matriceA(char a[nmax][nmax], int n, int lungime_cheie, char s[]) {
     int lin = 0, col = 0;
 
@@ -134,12 +146,44 @@ void afisare_matrice(char a[nmax][nmax], int n, int m) {
      }
 }
 
+void reverse_sort(char a[nmax][nmax], char cheie[], int nr_linii){
+    int marcat[51] = {0};
+    char copie_cheie[51];
+    strcpy(copie_cheie, cheie);
+    copie_cheie[strlen(copie_cheie)] = '\0';
+    sortare_vector_char(copie_cheie, strlen(cheie));
+    for(int i = 0; i < strlen(cheie); ++i) {//parcurgem cheia
+        for(int j = 0; j < strlen(cheie); ++j){//parcurgem copia cheii
+            if(cheie[i] == copie_cheie[j] && !marcat[j]){//daca e caracterul corect si nu am mai pus o data linia aia
+                marcat[j] = i + 1;
+                break;
+            }
+        }
+    }
+
+    // for(int i = 0; i < strlen(cheie); ++i)
+    //     printf("%d ", marcat[i]);
+    // printf("\n");
+
+    for(int i = 0; i < strlen(cheie); ++i) {
+        for(int j = i + 1; j < strlen(cheie); ++j) {
+            if(marcat[i] > marcat[j]){
+                swap_int(&marcat[i], &marcat[j]);
+                swap_coloane(a, i, j, nr_linii);
+            }
+        }
+    }
+
+    //afisare_matrice(a, nr_linii, strlen(cheie));
+
+}
+
 void codificareA(char s[], int n, char cheie[], int lungime_cheie) {
     
     char a[nmax][nmax];
     for(int i = 0; i < 500; ++i) {
         for(int j = 0; j < 500; ++j) {
-            a[i][j] = '0';
+            a[i][j] = ' ';
         }
     }
 
@@ -154,19 +198,41 @@ void codificareA(char s[], int n, char cheie[], int lungime_cheie) {
     int k = 0;
     for(int j = 0; j < lungime_cheie; ++j){
         for(int i = 0; i < nr_linii; ++i) {
-            if(a[i][j] != '0'){
-                //printf("%c", a[i][j]);
-                s[k] = a[i][j];
-            }
-            else
-            {
-                //printf(" ");
-                s[k] = ' ';
-            }
+            s[k] = a[i][j];
             ++k;
         }
         //printf("\n");
     }
+    s[k] = '\0';
+    printf("%s\n", s);
+}
+
+void decodificareA(char s[], int n, char cheie[], int lungime_cheie) {
+    int nr_linii;
+    char a[nmax][nmax];
+    nr_linii = n / lungime_cheie;
+    if(n % lungime_cheie != 0)
+        nr_linii++;
+    
+    int k = 0;
+    for(int j = 0; j < lungime_cheie; ++j){
+        for(int i = 0; i < nr_linii; ++i) {
+            a[i][j] = s[k];
+            ++k;
+        }
+    }
+    //afisare_matrice(a, nr_linii, lungime_cheie);
+    reverse_sort(a, cheie, nr_linii);
+
+    k = 0;
+    for(int i = 0; i < nr_linii; ++i){
+        for(int j = 0; j < strlen(cheie); ++j) {
+            s[k] = a[i][j];
+            ++k;
+        }
+        //printf("\n");
+    }
+
     s[k] = '\0';
     printf("%s\n", s);
 }
@@ -205,19 +271,21 @@ int main() {
 
         if(cod[0] == 'C' && cod[strlen(cod) - 1] == 'A') {
             getchar();//scap de spatiu de dupa codificare
-            //printf("CHEIA ESTE :");
             fgets(cheie, 51, stdin);
-            //puts(cheie);
-            //printf("before\n");
-            //puts(s);
             int lungime_cheie = strlen(cheie);
-            //printf("lungime cheie = %d", lungime_cheie);
             lungime_cheie--;
             cheie[lungime_cheie] = '\0';
             codificareA(s, n, cheie, lungime_cheie);
-            //printf("after\n");
         }
 
+        if(cod[0] == 'D' && cod[strlen(cod) - 1] == 'A'){
+            getchar();//scap de spatiu de dupa codificare
+            fgets(cheie, 51, stdin);
+            int lungime_cheie = strlen(cheie);
+            lungime_cheie--;
+            cheie[lungime_cheie] = '\0';
+            decodificareA(s, n, cheie, lungime_cheie);
+        }
         //actualizam dimensiunea sirului
         n = strlen(s);
         
