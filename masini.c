@@ -5,7 +5,7 @@
 
 #define l_max 20
 
-void cerinta_unu(char **brand, char **numar, char **combustibil, double *consum, int *km, int n, int frecv[4]) {
+void cerinta_unu(char **combustibil, int n, int frecv[4]) {
     for(int i = 0; i < n; ++i) {
         if(strcmp(combustibil[i], "benzina") == 0)
             frecv[0]++;
@@ -18,6 +18,44 @@ void cerinta_unu(char **brand, char **numar, char **combustibil, double *consum,
     }
 }
 
+
+bool litera_mare(char ch){
+    return ('A' <= ch && ch <='Z');
+}
+
+bool cifra(char ch){
+    return ('0' <= ch && ch <= '9');
+}
+
+bool numar_corect(char **numar, int i) {
+    int lungime_numar = strlen(numar[i]);
+    if(lungime_numar < 6 && lungime_numar > 8)
+        return false;
+    
+    //A11AAA
+    if(lungime_numar == 6 && litera_mare(numar[i][0]) && cifra(numar[i][1]) && cifra(numar[i][2]) && litera_mare(numar[i][3]) && litera_mare(numar[i][4]) && litera_mare(numar[i][5]))
+        return true;
+    
+    //A111AAA
+    if(lungime_numar == 7 && litera_mare(numar[i][0]) && cifra(numar[i][1]) && cifra(numar[i][2]) && cifra(numar[i][3]) && litera_mare(numar[i][4]) && litera_mare(numar[i][5]) && litera_mare(numar[i][6]))
+        return true;
+
+    //AA11AAA
+    if(lungime_numar == 7 && litera_mare(numar[i][0]) && litera_mare(numar[i][1]) && cifra(numar[i][2]) && cifra(numar[i][3]) && litera_mare(numar[i][4]) && litera_mare(numar[i][5]) && litera_mare(numar[i][6]))
+        return true;
+    
+    //AA111AAA
+    if(lungime_numar == 8 && litera_mare(numar[i][0]) && litera_mare(numar[i][1]) && cifra(numar[i][2]) && cifra(numar[i][3]) && cifra(numar[i][4]) && litera_mare(numar[i][5]) && litera_mare(numar[i][6]) && litera_mare(numar[i][7]))
+        return true;
+
+    return false;
+}
+void cerinta_trei(char **numar, int n, int valid[]) {
+    
+    for(int i = 0; i < n; ++i) {
+        valid[i] = numar_corect(numar, i);
+    }
+}
 int main() {
     char **brand;
     char **numar;
@@ -71,7 +109,7 @@ int main() {
     }
     if(!merge)
         printf("ceva buseste\n");
-        
+
     getchar();//pt enter
     scanf("%c", &cerinta);
 
@@ -98,11 +136,31 @@ int main() {
 
     if(cerinta == 'a'){
         int frecv[4] = {0};
-        cerinta_unu(brand, numar, combustibil, consum, km, n, frecv);
+        cerinta_unu(combustibil, n, frecv);
         printf("benzina - %d\n", frecv[0]);
         printf("motorina - %d\n", frecv[1]);
         printf("hibrid - %d\n", frecv[2]);
         printf("electric - %d\n", frecv[3]);
+    }
+
+    if(cerinta == 'c'){
+        int *valid;
+        valid = calloc(n, sizeof(int));
+        cerinta_trei(numar, n, valid);
+        // for(int i = 0; i < n; ++i)
+        //     printf("%d ", valid[i]);
+        // printf("\n");
+
+        bool ok = true;
+        for(int i = 0; i < n; ++i) {
+            if(!valid[i]){
+                printf("%s cu numarul %s: numar invalid\n", brand[i], numar[i]);
+                ok = false;
+            }
+        }
+
+        if(ok)
+            printf("Numere corecte!\n");
     }
     return 0;
 }
