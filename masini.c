@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-
 #define l_max 20
+#define pret_benzina 8.02
+#define pret_motorina 9.29
 
 void cerinta_unu(char **combustibil, int n, int frecv[4]) {
     for(int i = 0; i < n; ++i) {
@@ -16,6 +17,46 @@ void cerinta_unu(char **combustibil, int n, int frecv[4]) {
         if(strcmp(combustibil[i], "electric") == 0)
             frecv[3]++;
     }
+}
+
+float consum_per_masina(double consum, int km) {
+    return consum * km / 100;
+}
+
+void grupez_branduri(char **brand, float *litri, double *lei,  int n, bool *viz){
+    float litri_total;
+    double lei_total;
+    for(int i = 0; i < n; ++i) {
+        if(!viz[i]){
+            litri_total = litri[i];
+            lei_total = lei[i];
+            for(int j = i + 1; j < n; ++j) {
+                if(strcmp(brand[i], brand[j]) == 0){
+                    //daca sunt acelasi brand
+                    litri_total += litri[j];
+                    lei_total += lei[j];
+                    viz[j] = true;
+                }
+            }
+            //printf("litri : %f      lei : %lf\n", litri_total, lei_total);
+            litri[i] = litri_total;
+            lei[i] = lei_total;
+        }
+    }
+}
+
+//urmeaza sa le separi in functie de brand parcurgand vectorul de branduri si marcand brandurile folosite
+void cerinta_doi(char **brand, char **combustibil, double *consum, int n, int *km, float *litri, double *lei, bool *viz) {
+    //cream pentru fiecare masina consumul_total si pretul
+    for(int i = 0; i < n; ++i) {
+        litri[i] = consum_per_masina(consum[i], km[i]);
+        //printf("i = %d => %f ", i, litri[i]);
+        if(strcmp(combustibil[i], "motorina") == 0)
+            lei[i] = (double) pret_motorina * litri[i];
+        else
+            lei[i] = (double) pret_benzina * litri[i];
+    }
+    grupez_branduri(brand, litri, lei, n, viz);
 }
 
 
@@ -50,7 +91,7 @@ bool numar_corect(char **numar, int i) {
 
     return false;
 }
-void cerinta_trei(char **numar, int n, int valid[]) {
+void cerinta_trei(char **numar, int n, bool valid[]) {
     
     for(int i = 0; i < n; ++i) {
         valid[i] = numar_corect(numar, i);
@@ -84,12 +125,6 @@ int main() {
     consum = malloc(n * sizeof(double));
     km = malloc(n * sizeof(int));
 
-    
-    // for(int i = 0; i < n; ++i){
-    //     realloc(combustibil[i], strlen(combustibil[i]) * sizeof(char));
-    //     realloc(brand[i], strlen(brand[i]) * sizeof(char));
-    //     realloc(numar[i], strlen(numar[i]) * sizeof(char));
-    // }
     bool merge = 0;
     for(int i = 0; i < n; ++i){
         scanf("%s", brand[i]);
@@ -135,6 +170,7 @@ int main() {
     
 
     if(cerinta == 'a'){
+        //avem 4 tipuri de combustibil
         int frecv[4] = {0};
         cerinta_unu(combustibil, n, frecv);
         printf("benzina - %d\n", frecv[0]);
@@ -143,9 +179,23 @@ int main() {
         printf("electric - %d\n", frecv[3]);
     }
 
+    if(cerinta == 'b'){
+        float *litri = calloc(n, sizeof(float));
+        double *lei = calloc(n, sizeof(double));
+        bool *viz = calloc(n, sizeof(bool));
+        cerinta_doi(brand, combustibil, consum, n, km, litri, lei, viz);
+        for(int i = 0; i < n; ++i) {
+            if(!viz[i]){
+                printf("%s a consumat %.2f - %.2lf lei\n", brand[i], litri[i], lei[i]);
+            }
+        }
+        free(litri);
+        free(lei);
+        free(viz);
+    }
     if(cerinta == 'c'){
-        int *valid;
-        valid = calloc(n, sizeof(int));
+        bool *valid;
+        valid = calloc(n, sizeof(bool));
         cerinta_trei(numar, n, valid);
         // for(int i = 0; i < n; ++i)
         //     printf("%d ", valid[i]);
@@ -161,6 +211,20 @@ int main() {
 
         if(ok)
             printf("Numere corecte!\n");
+        
+        free(valid);
     }
+    
+    //eliberam memoria 
+    for(int i = 0; i < n; ++i){
+        free(brand[i]);
+        free(numar[i]);
+        free(combustibil[i]);
+    }
+    free(brand);
+    free(numar);
+    free(combustibil);
+    free(consum);
+    free(km);
     return 0;
 }
