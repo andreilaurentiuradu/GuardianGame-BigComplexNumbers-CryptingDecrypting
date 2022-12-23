@@ -350,7 +350,6 @@ int main() {
             // apelam functia de decodificare pentru tipul B
             decodificareB(s, nr, alfabet);
         }
-
         // actualizam dimensiunea sirului
         lungime_sir = strlen(s);
 
