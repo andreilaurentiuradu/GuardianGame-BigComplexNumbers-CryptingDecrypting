@@ -1,5 +1,4 @@
-# TEMA1-PCLP
-312CC Radu Andrei-Laurențiu
+Radu Andrei-Laurențiu
 
 Problema 1:
 	Cerință: 
